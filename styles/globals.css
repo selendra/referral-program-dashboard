@@ -1,9 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700;900&display=swap');
+
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: 'Lato',-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif!important;
+  overflow-x: hidden;
 }
 
 a {
@@ -13,4 +16,26 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+/* antd custom */
+.ant-table {
+  border-radius: 16px!important;
+}
+.ant-table-tbody > tr.ant-table-row:hover > td {
+  background-color: transparent!important;
+}
+.ant-table th { 
+  border-radius: 16px!important;
+  font-weight: 600!important;
+} 
+.ant-table-pagination li,
+.ant-table-pagination li button {
+  border-radius: 8px!important;
+}
+.ant-tag {
+  border-radius: 6px!important;
+}
+.ant-modal-content {
+  border-radius: 18px!important;
 }
