@@ -1,5 +1,6 @@
 import { useState, useContext } from 'react'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 import Web3 from 'web3'
 import Cookie from 'js-cookie'
 import styled from 'styled-components'
@@ -9,6 +10,7 @@ import Header from '../components/Header'
 import AuthContext from '../context/AuthContext'
 
 export default function Importaccount() {
+  const router = useRouter();
   const { user } = useContext(AuthContext);
   const testnet = 'https://data-seed-prebsc-1-s1.binance.org:8545';
   const [json, setJson] = useState();
@@ -19,7 +21,7 @@ export default function Importaccount() {
   const beforeUploadJson = (file) => {
     const reader = new FileReader();
     reader.onload = () => {
-      setJson(reader.result);
+      setJson(JSON.parse(reader.result));
       // console.log(JSON.parse(reader.result))
     };
     reader.readAsText(file);
@@ -34,6 +36,7 @@ export default function Importaccount() {
     } else {
       Cookie.set(`account:${user.email}`, JSON.stringify(json));
     }
+    router.push('/get-invite');
   }
 
   return (

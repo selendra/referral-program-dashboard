@@ -1,6 +1,7 @@
 import Header from "../components/Header"
 import Head from 'next/head'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import styled from 'styled-components'
 import Cookie from 'js-cookie'
 import Web3 from 'web3'
@@ -10,8 +11,10 @@ import abi from '../contract/abi.json'
 import AuthContext from '../context/AuthContext'
 import { NEXT_URL } from '../config'
 import { PlusOutlined } from '@ant-design/icons' 
+import Loading from '../components/Loading'
 
 export default function GetInvite() {
+  const router = useRouter();
   const {user, loading} = useContext(AuthContext);
   const contractAddress = '0xd84D89d5C9Df06755b5D591794241d3FD20669Ce';
   const testnet = 'https://data-seed-prebsc-1-s1.binance.org:8545';
@@ -25,7 +28,7 @@ export default function GetInvite() {
   const [indicator, setIndicator] = useState(false);
   
   const getBalance = async () => {
-    if(cookie) {
+    if(Cookie.get(`account:${user.email}`)) {
       let web3 = new Web3(testnet);
       let contract = new web3.eth.Contract(abi, contractAddress);
       
@@ -38,7 +41,7 @@ export default function GetInvite() {
   
       // Get Balance
       const data = JSON.parse(Cookie.get(`account:${user.email}`));
-      const address = data.address; 
+      const address = data.address;
       let balance = await contract.methods.balanceOf(`0x${address}`).call();
       setBalance(balance / Math.pow(10,decimal));
     }
@@ -47,7 +50,7 @@ export default function GetInvite() {
   const handleConfirm = async () => {
     if(!cookie) return message.error("Please import your Account!");
     setIndicator(true);
-    const data = JSON.parse(Cookie.get(`account:${user.email}`));
+    const data = JSON.stringify(Cookie.get(`account:${user.email}`));
     const res = await fetch(`${NEXT_URL}/api/get-invite`, {
       method: 'POST',
       headers: {
@@ -62,19 +65,23 @@ export default function GetInvite() {
     const resData = await res.json();
 
     if(res.ok) {
-      console.log(resData.data.data)
+      message.success('successfully purchase!')
+      router.push('/successfully');
     } else {
-      message.error(resData.message)
+      message.error(resData.message);
     }
+    setIndicator(false);
   }
 
   useEffect(() => {
     if(!loading && user){ 
-      getBalance();
       setCookie(Cookie.get(`account:${user.email}`));
+      getBalance();
     }
-  },[loading])
+  },[loading]);
 
+
+  // if(loading) return <Loading />
   return (
     <div>
       <Head>
@@ -106,7 +113,7 @@ export default function GetInvite() {
                   <TextPrice>1 SEL</TextPrice>
                 </Col>
                 <Col>
-                  <ButtonBuy type='primary' onClick={() => setIsModalVisible(true)}>Buy</ButtonBuy>
+                  <ButtonBuy type='primary' onClick={() => setIsModalVisible(true)}>Purchase</ButtonBuy>
                 </Col>
               </Row>
             </RefItem>
@@ -123,7 +130,7 @@ export default function GetInvite() {
             <TextLight>Price:</TextLight>
             <SubTitle>1 SEL</SubTitle>
             <Row>
-              <ButtonConfirm type='primary' onClick={() => setModalConfirm(true)}>Buy</ButtonConfirm>
+              <ButtonConfirm type='primary' onClick={() => setModalConfirm(true)}>Purchase</ButtonConfirm>
               <ButtonCancel onClick={() => setIsModalVisible(false)}>Cancel</ButtonCancel>
             </Row>
           </Modal>

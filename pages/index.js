@@ -5,7 +5,6 @@ import { Table, Tag, Space } from 'antd'
 import styled from 'styled-components'
 
 import Header from '../components/Header'
-import Loading from '../components/Loading'
 import { API_URL } from '../config'
 import { parseCookies } from '../helper'
 import AuthContext from '../context/AuthContext'

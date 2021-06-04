@@ -81,6 +81,7 @@ export const AuthProvider = ({ children }) => {
   }
 // Check if user is logged in
   const checkUserLoggedIn = async () => {
+    setLoading(true);
     const res = await fetch(`${NEXT_URL}/api/user`);
     const data = await res.json();
 
@@ -90,6 +91,7 @@ export const AuthProvider = ({ children }) => {
       router.push('/login');
       setUser(null);
     }
+    setLoading(false);
   }
 
   const context = { user, error, loading, register, login, logout };
