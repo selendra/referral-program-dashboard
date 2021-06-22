@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import Web3 from 'web3'
@@ -8,11 +8,11 @@ import { UploadOutlined } from '@ant-design/icons';
 import { Button, Row, Input, Upload, Col, Switch } from 'antd'
 import Header from '../components/Header'
 import AuthContext from '../context/AuthContext'
+import { useWeb3 } from '../utils/useWeb3'
 
 export default function Importaccount() {
   const router = useRouter();
-  const { user } = useContext(AuthContext);
-  const testnet = 'https://data-seed-prebsc-1-s1.binance.org:8545';
+  const { user, getUserAccount } = useContext(AuthContext);
   const [json, setJson] = useState();
   const [private_key, setPrivate_key] = useState('');
   const [password, setPassword] = useState('');
@@ -29,14 +29,16 @@ export default function Importaccount() {
   }
 
   const handleImport = async () => {
-    const web3 = new Web3(testnet);
-    if(private_key) {
-      const keystoreJsonV3 = web3.eth.accounts.encrypt(private_key, password);
-      Cookie.set(`account:${user.email}`, JSON.stringify(keystoreJsonV3));
-    } else {
-      Cookie.set(`account:${user.email}`, JSON.stringify(json));
+    const web3 = useWeb3();
+    if(user.email) {
+      if(private_key) {
+        const keystoreJsonV3 = web3.eth.accounts.encrypt(private_key, password);
+        Cookie.set(`account:${user.email}`, JSON.stringify(keystoreJsonV3));
+      } else {
+        Cookie.set(`account:${user.email}`, JSON.stringify(json));
+      }
+      router.push('/get-invite');
     }
-    router.push('/get-invite');
   }
 
   return (
@@ -51,6 +53,9 @@ export default function Importaccount() {
           <div style={{padding: '1em 0'}}/>
           <Row justify='center'>
             <Col>
+              <Row>
+                <ButtonMeta type='primary' onClick={getUserAccount}>Connect with metamask</ButtonMeta>
+              </Row><br/>
               <Row align='middle'>
                 <Switch onChange={() => setPrivateKey(!privateKey)} /><SpanText>Private Key</SpanText><br/>
               </Row>
@@ -106,4 +111,7 @@ const Spacing = styled.div`
 const SpanText = styled.span`
   font-weight: 600;
   margin-left: 10px;
+`
+const ButtonMeta = styled(Button)`
+  border-radius: 16px;
 `

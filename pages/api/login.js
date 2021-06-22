@@ -32,7 +32,7 @@ export default async (req, res) => {
       )
       res.status(200).json({ user: data })
     } else {
-      res.status(401).json({ message: data.error })
+      res.status(401).json({ message: data.message || data.error })
     }
   }
 }

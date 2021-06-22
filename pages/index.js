@@ -1,13 +1,12 @@
-import { useContext } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
-import { Table, Tag, Space } from 'antd'
 import styled from 'styled-components'
+import { Table, Tag, Space } from 'antd'
 
 import Header from '../components/Header'
+import ShowBalance from '../components/ShowBalance'
 import { API_URL } from '../config'
 import { parseCookies } from '../helper'
-import AuthContext from '../context/AuthContext'
 
 export default function Home({data}) {
   const columns = [
@@ -46,7 +45,7 @@ export default function Home({data}) {
         const ref = `https://airdrop.selendra.org/claim-$sel?ref=${record.referral_id}`;
         return(
           <Space size="middle">
-            <a onClick={() => {navigator.clipboard.writeText(ref), alert(`Copy to clipboard: ${ref}`)}}>Invite Friends</a>
+            <a onClick={() => {navigator.clipboard.writeText(ref), alert(`Copy to clipboard: ${ref}`)}}>Invite Friends/Copy</a>
           </Space>
         )
       },
@@ -62,6 +61,7 @@ export default function Home({data}) {
       <Header />
       <Container>
         <HomeContainer>
+          <ShowBalance />
           <div style={{padding: '1em 0'}}/>
           <Table columns={columns} dataSource={data} rowKey={record => record._id} />
         </HomeContainer>

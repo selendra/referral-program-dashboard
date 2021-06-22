@@ -1,54 +1,79 @@
 import Header from "../components/Header"
 import Head from 'next/head'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
 import Cookie from 'js-cookie'
 import Web3 from 'web3'
 import { useState, useContext, useEffect } from 'react'
 import { Button, Row, Input, Modal, Col, message } from 'antd'
-import abi from '../contract/abi.json'
 import AuthContext from '../context/AuthContext'
 import { NEXT_URL } from '../config'
-import { PlusOutlined } from '@ant-design/icons' 
-import Loading from '../components/Loading'
+
+import ShowBalance from '../components/ShowBalance'
+import { useContract } from "../utils/useContract"
+import { useWeb3 } from "../utils/useWeb3"
 
 export default function GetInvite() {
   const router = useRouter();
-  const {user, loading} = useContext(AuthContext);
-  const contractAddress = '0xd84D89d5C9Df06755b5D591794241d3FD20669Ce';
-  const testnet = 'https://data-seed-prebsc-1-s1.binance.org:8545';
+  const {user, loading, balance, address} = useContext(AuthContext);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalConfirm, setModalConfirm] = useState(false);
-  const [balance, setBalance] = useState();
-  const [symbol, setSymbol] = useState();
   const [password, setPassword] = useState();
   const [cookie, setCookie] = useState();
   const [indicator, setIndicator] = useState(false);
   
-  const getBalance = async () => {
-    if(Cookie.get(`account:${user.email}`)) {
-      let web3 = new Web3(testnet);
-      let contract = new web3.eth.Contract(abi, contractAddress);
+  const purchaseModal = async() => {
+    if(cookie){
+      setModalConfirm(true);
+    } else {
+      const web3 = useWeb3();
+      const contract = useContract();
+
+      const recipient = '0x1d95aD53E69Fe58efe777a7490EcF63A2CcbB1De'
+      const transaction = contract.methods.transfer(
+        recipient,
+        web3.utils.toHex(web3.utils.toWei('1', 'ether'))
+      );
       
-      // Get decimal
-      let decimal = await contract.methods.decimals().call();
-  
-      // Get Symbol
-      let symbol = await contract.methods.symbol().call();
-      setSymbol(symbol);
-  
-      // Get Balance
-      const data = JSON.parse(Cookie.get(`account:${user.email}`));
-      const address = data.address;
-      let balance = await contract.methods.balanceOf(`0x${address}`).call();
-      setBalance(balance / Math.pow(10,decimal));
+      const options = {
+        from: address,
+        to      : transaction._parent._address,
+        data    : transaction.encodeABI(),
+        gas     : "0x" + await transaction.estimateGas({from: address}),
+        gasPrice: "0x" + await web3.eth.getGasPrice()
+      };
+      const txHash = await ethereum.request({
+        method: 'eth_sendTransaction',
+        params: [options],
+      })
+      try {
+        await web3.eth.getTransaction(txHash)
+        const res = await fetch(`${NEXT_URL}/api/metamask`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            txHash
+          })
+        })
+        const resData = await res.json();
+
+        if(res.ok) {
+          message.success('successfully purchase!')
+          router.push('/successfully');
+        } else {
+          message.error(resData.message);
+        }
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
 
   const handleConfirm = async () => {
-    if(!cookie) return message.error("Please import your Account!");
+    if(!cookie && !balance) return message.error("Please import your Account!");
     setIndicator(true);
     const data = JSON.stringify(Cookie.get(`account:${user.email}`));
     const res = await fetch(`${NEXT_URL}/api/get-invite`, {
@@ -67,21 +92,19 @@ export default function GetInvite() {
     if(res.ok) {
       message.success('successfully purchase!')
       router.push('/successfully');
+      setIndicator(false);
     } else {
       message.error(resData.message);
+      setIndicator(false);
     }
-    setIndicator(false);
   }
 
   useEffect(() => {
     if(!loading && user){ 
       setCookie(Cookie.get(`account:${user.email}`));
-      getBalance();
     }
   },[loading]);
 
-
-  // if(loading) return <Loading />
   return (
     <div>
       <Head>
@@ -91,17 +114,10 @@ export default function GetInvite() {
       <Header />
       <Container>
         <HomeContainer>
-          <div style={{padding: '1em 0'}}/>
           <Row justify='end'>
-            { cookie ? 
-              (
-                <Balance>Balance: <BalanceHG>{balance} {symbol}</BalanceHG></Balance>
-              ):(
-                <Link href='/importaccount'>
-                  <ButtonBuy style={{marginBottom: '1em'}} icon={<PlusOutlined />}>Import Account</ButtonBuy>
-                </Link>
-              )
-            }
+          </Row>
+          <Row justify='end'>
+            <ShowBalance />
           </Row>
           <Row>
             <RefItem>
@@ -113,7 +129,7 @@ export default function GetInvite() {
                   <TextPrice>1 SEL</TextPrice>
                 </Col>
                 <Col>
-                  <ButtonBuy type='primary' onClick={() => setIsModalVisible(true)}>Purchase</ButtonBuy>
+                  <ButtonBuy type='primary' onClick={() => setIsModalVisible(true) }>Purchase</ButtonBuy>
                 </Col>
               </Row>
             </RefItem>
@@ -130,7 +146,7 @@ export default function GetInvite() {
             <TextLight>Price:</TextLight>
             <SubTitle>1 SEL</SubTitle>
             <Row>
-              <ButtonConfirm type='primary' onClick={() => setModalConfirm(true)}>Purchase</ButtonConfirm>
+              <ButtonConfirm type='primary' onClick={() => purchaseModal()}>Purchase</ButtonConfirm>
               <ButtonCancel onClick={() => setIsModalVisible(false)}>Cancel</ButtonCancel>
             </Row>
           </Modal>
@@ -163,15 +179,6 @@ const HomeContainer = styled.div`
   @media (max-width: 56rem) {
     padding: 0 1em;
   } 
-`
-const Balance = styled.p`
-  font-size: 16px;
-  font-weight: 600;
-`
-const BalanceHG = styled.span`
-  font-size: 18px;
-  color: #D65B09;
-  margin-left: 0.4em;
 `
 const RefItem = styled.div`
   background: #fff;

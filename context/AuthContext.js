@@ -1,7 +1,9 @@
-import { createContext, useState, useEffect } from 'react'
+import { createContext, useState, useEffect, useContext } from 'react'
 import { useRouter } from 'next/router'
 import { NEXT_URL } from '../config'
-import { message } from 'antd';
+import { message } from 'antd'
+import { useContract } from '../utils/useContract'
+import Cookie from 'js-cookie'
 
 const AuthContext = createContext();
 
@@ -10,9 +12,16 @@ export const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const [address, setAddress] = useState('');
+  const [balance, setBalance] = useState('');
+  const [symbol, setSymbol] = useState('');
+
   const router = useRouter();
 
-  useEffect(() => checkUserLoggedIn(), [])
+  useEffect(() => {
+    checkUserLoggedIn(),
+    getUserAccount()
+  }, [])
 
   // Register user
   const register = async ({email, password, phone, wallet}) => {
@@ -60,6 +69,7 @@ export const AuthProvider = ({ children }) => {
 
     if(res.ok) {
       router.push('/');
+      checkUserLoggedIn();
       message.success('successfully login');
       setLoading(false);
     } else {
@@ -94,7 +104,56 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }
 
-  const context = { user, error, loading, register, login, logout };
+// get user account from metamask
+  const getUserAccount = async() => {
+    if (window.ethereum) {
+      try {
+        await ethereum.request({ method: 'eth_requestAccounts' })
+        .then(accounts => {
+          setAddress(accounts[0]);
+          getBepTokenBalance(accounts[0]);
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      alert("Metamask extensions not detected!");
+    }
+  };
+// get Contract token balance 
+  const getBepTokenBalance = async(fromAddress) => {
+    let contract = useContract();
+    
+    // Get decimal
+    let decimal = await contract.methods.decimals().call();
+    // Get Symbol
+    let symbol = await contract.methods.symbol().call();
+    setSymbol(symbol); 
+
+    // if(Cookie.get(`account:${user.email}`)) {
+    //   // Get Balance
+    //   const data = JSON.parse(Cookie.get(`account:${user.email}`));
+    //   let balance = await contract.methods.balanceOf(`0x${data.address}`).call();
+    //   setBalance(balance / Math.pow(10,decimal));
+    // } else {
+      // Get Balance
+      let balance = await contract.methods.balanceOf(fromAddress).call();
+      setBalance(balance / Math.pow(10,decimal))
+    // }
+  }
+
+  const context = { 
+    user, 
+    error, 
+    loading, 
+    register, 
+    login, 
+    logout, 
+    getUserAccount,
+    address,
+    balance,
+    symbol 
+  };
   return (
     <AuthContext.Provider value={context}>
       { children }

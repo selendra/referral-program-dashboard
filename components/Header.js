@@ -6,7 +6,6 @@ import AuthContext from '../context/AuthContext'
 
 export default function Header() {
   const { user, logout } = useContext(AuthContext);
-
   const [visible, setVisible] = useState(false);
 
   return (

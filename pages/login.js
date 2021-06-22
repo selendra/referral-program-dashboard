@@ -8,11 +8,12 @@ import { useContext, useState } from 'react'
 import AuthContext from '../context/AuthContext'
 
 export default function Login() {
-  const { login, error, loading } = useContext(AuthContext);
+  const { login, error } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = (val) => {
-    // setLoading(true);
-    login({ email: val.email, password: val.password })
+    setLoading(true);
+    login({ email: val.email, password: val.password }).then(_=> setLoading(false))
   }
 
   return (
@@ -63,6 +64,9 @@ const LoginContainer = styled.div`
   align-items: center;
   background-color: #fff;
   border-radius: 16px;
+  @media (max-width: 500px) {
+    padding: 20px;
+  }
 `
 const InputStyled = styled(Input)`
   border-radius: 16px;
