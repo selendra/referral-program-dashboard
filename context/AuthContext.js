@@ -19,8 +19,8 @@ export const AuthProvider = ({ children }) => {
   const router = useRouter();
 
   useEffect(() => {
-    checkUserLoggedIn(),
-    getUserAccount()
+    checkUserLoggedIn()
+    // getUserAccount()
   }, [])
 
   // Register user
@@ -112,6 +112,7 @@ export const AuthProvider = ({ children }) => {
         .then(accounts => {
           setAddress(accounts[0]);
           getBepTokenBalance(accounts[0]);
+          router.push('/');
         });
       } catch (error) {
         console.error(error);
