@@ -34,14 +34,13 @@ export default function GetInvite() {
         recipient,
         web3.utils.toHex(web3.utils.toWei('1', 'ether'))
       );
-      
+
       const options = {
         from: address,
         to      : transaction._parent._address,
         data    : transaction.encodeABI(),
-        gas     : "0x" + await transaction.estimateGas({from: address}),
-        gasPrice: "0x" + await web3.eth.getGasPrice()
       };
+
       const txHash = await ethereum.request({
         method: 'eth_sendTransaction',
         params: [options],
