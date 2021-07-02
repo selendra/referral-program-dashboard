@@ -54,8 +54,8 @@ export default function Login() {
 const Container = styled.div`
   display: grid;
   place-items: center;
-  height: 100vh;
-  background-color: whitesmoke;
+  min-height: 100vh;
+  background-color: #e6eeff;
 `
 const LoginContainer = styled.div`
   display: flex;
@@ -71,7 +71,7 @@ const LoginContainer = styled.div`
 const InputStyled = styled(Input)`
   border-radius: 16px;
   width: 240px;
-  height: 40px;
+  height: 50px;
 `
 const ButtonStyled = styled(Button)`
   width: 100%;

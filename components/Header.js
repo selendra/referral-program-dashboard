@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Row, Col, Button, Drawer } from 'antd'
+import { Row, Col, Button, Drawer, Avatar } from 'antd'
 import styled from 'styled-components'
 import { useContext, useState } from 'react'
 import AuthContext from '../context/AuthContext'
@@ -25,7 +25,16 @@ export default function Header() {
           </Col>
           <Col xs={0} sm={0} md={12} lg={12} xl={12}>
             <Row align='middle' justify='end'>
-              {user && <ProfileName>{user.email}</ProfileName>}
+              {user && (
+                <Avatar 
+                  style={{ backgroundColor: '#f56a00', verticalAlign: 'middle', cursor: 'pointer' }} 
+                  size="large"
+                >
+                  <Link href='/profile'>
+                    <ProfileName>{(user.email).charAt(0).toUpperCase()}</ProfileName>
+                  </Link>
+                </Avatar>
+              )}
               <ButtonBuy><Link href='/get-invite'>Invite more</Link></ButtonBuy>
               <ButtonLogout onClick={logout} type='text'>Log Out</ButtonLogout>
             </Row>

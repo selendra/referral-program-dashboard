@@ -46,8 +46,8 @@ export default function ShowBalance() {
             <ButtonImport style={{marginBottom: '1em'}} icon={<PlusOutlined />}>Import Account</ButtonImport>
           </Link>
         )}
-        { balance && <Text>Balance: <Balance>{balance}-{symbol}</Balance></Text> }
-        { cBalance && <Text>Balance: <Balance>{cBalance}-{cSymbol}</Balance></Text>}
+        { balance && <Text>Balance: <Balance>{balance} {symbol}</Balance></Text> }
+        { cBalance && <Text>Balance: <Balance>{cBalance} {cSymbol}</Balance></Text>}
       </Row>
     </div>
   )

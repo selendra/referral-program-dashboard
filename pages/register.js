@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Form, Input, Button, Row } from 'antd'
-import { API_URL } from '../config'
 import { useContext, useState } from 'react'
 import AuthContext from '../context/AuthContext'
 
@@ -14,7 +13,7 @@ export default function Register() {
   const handleRegister = async(val) => {
     setLoading(true);
     register({
-      email: val.email,
+      email: val.email.toLowerCase(),
       password: val.password,
       phone: val.phone,
       wallet: val.wallet
@@ -66,12 +65,12 @@ const Container = styled.div`
   display: grid;
   place-items: center;
   min-height: 100vh;
-  background-color: whitesmoke;
+  background-color: #e6eeff;
 `
 const LoginContainer = styled.div`
   display: flex;
   flex-direction: column; 
-  padding: 60px;
+  padding: 100px;
   align-items: center;
   background-color: #fff;
   border-radius: 16px;
@@ -82,7 +81,7 @@ const LoginContainer = styled.div`
 const InputStyled = styled(Input)`
   border-radius: 16px;
   width: 240px;
-  height: 40px;
+  height: 50px;
 `
 const ButtonStyled = styled(Button)`
   width: 100%;

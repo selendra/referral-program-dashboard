@@ -9,7 +9,6 @@ export default function Successfully() {
     <div>
       <Head>
         <title>Selendra Referral</title>
-        <meta name="description" content="" />
       </Head>
       <Header />
       <Container>
@@ -33,7 +32,6 @@ export default function Successfully() {
 const Container = styled.div`
   width: 100vw;
   height: 100vh;
-  /* background-color: #e2f3f5; */
 `
 const HomeContainer = styled.div`
   max-width: 56rem;

@@ -21,7 +21,8 @@ export default function GetInvite() {
   const [password, setPassword] = useState();
   const [cookie, setCookie] = useState();
   const [indicator, setIndicator] = useState(false);
-  
+  const [purchaseLoading, setPurchaseLoading] = useState(false);
+
   const purchaseModal = async() => {
     if(cookie){
       setModalConfirm(true);
@@ -45,27 +46,26 @@ export default function GetInvite() {
         method: 'eth_sendTransaction',
         params: [options],
       })
-      try {
-        await web3.eth.getTransaction(txHash)
-        const res = await fetch(`${NEXT_URL}/api/metamask`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            txHash
-          })
+      
+      setPurchaseLoading(true);
+      const res = await fetch(`${NEXT_URL}/api/metamask`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          txHash
         })
-        const resData = await res.json();
+      })
+      const resData = await res.json();
 
-        if(res.ok) {
-          message.success('successfully purchase!')
-          router.push('/successfully');
-        } else {
-          message.error(resData.message);
-        }
-      } catch (error) {
-        console.log(error)
+      if(res.ok) {
+        message.success('successfully purchase!')
+        router.push('/successfully');
+        setPurchaseLoading(false);
+      } else {
+        message.error(resData.message);
+        setPurchaseLoading(false);
       }
     }
   }
@@ -144,7 +144,7 @@ export default function GetInvite() {
             <TextLight>Price:</TextLight>
             <SubTitle>1 SEL</SubTitle>
             <Row>
-              <ButtonConfirm type='primary' onClick={() => purchaseModal()}>Purchase</ButtonConfirm>
+              <ButtonConfirm type='primary' loading={purchaseLoading} onClick={() => purchaseModal()}>Purchase</ButtonConfirm>
               <ButtonCancel onClick={() => setIsModalVisible(false)}>Cancel</ButtonCancel>
             </Row>
           </Modal>
@@ -169,7 +169,7 @@ export default function GetInvite() {
 const Container = styled.div`
   width: 100vw;
   height: 100vh;
-  background-color: #e2f3f5;
+  background-color: #e6eeff;
 `
 const HomeContainer = styled.div`
   max-width: 56rem;

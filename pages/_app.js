@@ -7,7 +7,6 @@ import '../styles/globals.css'
 import 'antd/dist/antd.css'
 
 Router.events.on('routeChangeStart', (url) => {
-  console.log(`Loading: ${url}`)
   NProgress.start()
 })
 Router.events.on('routeChangeComplete', () => NProgress.done())

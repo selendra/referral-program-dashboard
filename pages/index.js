@@ -101,7 +101,7 @@ export async function getServerSideProps({ req, res }) {
 const Container = styled.div`
   width: 100vw;
   height: 100vh;
-  background-color: #e2f3f5;
+  background-color: #e6eeff;
 `
 const HomeContainer = styled.div`
   max-width: 56rem;
