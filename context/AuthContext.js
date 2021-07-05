@@ -1,9 +1,8 @@
-import { createContext, useState, useEffect, useContext } from 'react'
+import { createContext, useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { NEXT_URL } from '../config'
 import { message } from 'antd'
+import { NEXT_URL } from '../config'
 import { useContract } from '../utils/useContract'
-import Cookie from 'js-cookie'
 
 const AuthContext = createContext();
 
@@ -20,7 +19,6 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     checkUserLoggedIn()
-    // getUserAccount()
   }, [])
 
   // Register user
@@ -110,15 +108,16 @@ export const AuthProvider = ({ children }) => {
       try {
         await ethereum.request({ method: 'eth_requestAccounts' })
         .then(accounts => {
+          if(accounts[0] !== user.wallet) return message.error("Look like it's not an address you register!!")
           setAddress(accounts[0]);
           getBepTokenBalance(accounts[0]);
-          router.push('/');
+          // router.push('/');
         });
       } catch (error) {
         console.error(error);
       }
     } else {
-      alert("Metamask extensions not detected!");
+      message.error("Metamask extensions not detected!");
     }
   };
 // get Contract token balance 

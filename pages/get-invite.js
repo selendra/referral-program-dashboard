@@ -24,9 +24,9 @@ export default function GetInvite() {
   const [purchaseLoading, setPurchaseLoading] = useState(false);
 
   const purchaseModal = async() => {
-    if(cookie){
+    if(cookie) {
       setModalConfirm(true);
-    } else {
+    } else if(address) {
       const web3 = useWeb3();
       const contract = useContract();
 
@@ -67,6 +67,8 @@ export default function GetInvite() {
         message.error(resData.message);
         setPurchaseLoading(false);
       }
+    } else {
+      message.error("Please import account!!");
     }
   }
 

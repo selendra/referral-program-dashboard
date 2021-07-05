@@ -26,14 +26,14 @@ export default function Header() {
           <Col xs={0} sm={0} md={12} lg={12} xl={12}>
             <Row align='middle' justify='end'>
               {user && (
-                <Avatar 
-                  style={{ backgroundColor: '#f56a00', verticalAlign: 'middle', cursor: 'pointer' }} 
-                  size="large"
-                >
-                  <Link href='/profile'>
+                <Link href='/profile'>
+                  <Avatar 
+                    style={{ backgroundColor: '#f56a00', verticalAlign: 'middle', cursor: 'pointer' }} 
+                    size="large"
+                  >
                     <ProfileName>{(user.email).charAt(0).toUpperCase()}</ProfileName>
-                  </Link>
-                </Avatar>
+                  </Avatar>
+                </Link>
               )}
               <ButtonBuy><Link href='/get-invite'>Invite more</Link></ButtonBuy>
               <ButtonLogout onClick={logout} type='text'>Log Out</ButtonLogout>

@@ -1,11 +1,10 @@
-import { useState, useContext, useEffect } from 'react'
+import { useState, useContext } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import Web3 from 'web3'
 import Cookie from 'js-cookie'
 import styled from 'styled-components'
 import { UploadOutlined } from '@ant-design/icons';
-import { Button, Row, Input, Upload, Col, Switch } from 'antd'
+import { Button, Row, Input, Upload, Col, Switch, message } from 'antd'
 import Header from '../components/Header'
 import AuthContext from '../context/AuthContext'
 import { useWeb3 } from '../utils/useWeb3'
@@ -22,7 +21,6 @@ export default function Importaccount() {
     const reader = new FileReader();
     reader.onload = () => {
       setJson(JSON.parse(reader.result));
-      // console.log(JSON.parse(reader.result))
     };
     reader.readAsText(file);
     return false;
@@ -33,8 +31,10 @@ export default function Importaccount() {
     if(user.email) {
       if(private_key) {
         const keystoreJsonV3 = web3.eth.accounts.encrypt(private_key, password);
+        if(keystoreJsonV3.address !== user.wallet) return message.error("Look like it's not an address you register!!");
         Cookie.set(`account:${user.email}`, JSON.stringify(keystoreJsonV3));
-      } else {
+      } else {  
+        if(json.address !== user.wallet) return message.error("Look like it's not an address you register!!");
         Cookie.set(`account:${user.email}`, JSON.stringify(json));
       }
       router.push('/get-invite');
