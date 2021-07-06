@@ -1,5 +1,5 @@
-import { createContext, useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
+import { createContext, useState, useEffect } from 'react'
 import { message } from 'antd'
 import { NEXT_URL } from '../config'
 import { useContract } from '../utils/useContract'
@@ -8,9 +8,7 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-
   const [address, setAddress] = useState('');
   const [balance, setBalance] = useState('');
   const [symbol, setSymbol] = useState('');
@@ -18,8 +16,8 @@ export const AuthProvider = ({ children }) => {
   const router = useRouter();
 
   useEffect(() => {
-    checkUserLoggedIn()
-  }, [])
+    checkUserLoggedIn();
+  }, []);
 
   // Register user
   const register = async ({email, password, phone, wallet}) => {
@@ -40,18 +38,17 @@ export const AuthProvider = ({ children }) => {
     const data = await res.json();
 
     if(res.ok) {
-      message.success('successfully register');
+      setLoading(false);
       router.push('/login');
-      setLoading(false);
+      message.success('successfully register');
     } else {
-      message.error(data.message);
-      setError(data.message);
       setLoading(false);
+      message.error(data.message);
     }
   }
-// Login user
+
+  // Login user
   const login = async ({email, password}) => {
-    setLoading(true);
     const res = await fetch(`${NEXT_URL}/api/login`, {
       method: 'POST',
       headers: {
@@ -69,25 +66,21 @@ export const AuthProvider = ({ children }) => {
       router.push('/');
       checkUserLoggedIn();
       message.success('successfully login');
-      setLoading(false);
     } else {
       message.error(data.message);
-      setError(data.message);
-      setLoading(false);
     }
   }
-// Logout user
+  // Logout user
   const logout = async () => {
     const res = await fetch(`${NEXT_URL}/api/logout`, {
       method: 'POST',
     })
-
-    if (res.ok) {
-      setUser(null)
-      router.push('/login')
+    if(res.ok) {
+      setUser(null);
+      router.push('/login');
     }
   }
-// Check if user is logged in
+  // Check if user is logged in
   const checkUserLoggedIn = async () => {
     setLoading(true);
     const res = await fetch(`${NEXT_URL}/api/user`);
@@ -95,14 +88,14 @@ export const AuthProvider = ({ children }) => {
 
     if (res.ok) {
       setUser(data.user);
+      setLoading(false);
     } else {
       router.push('/login');
       setUser(null);
+      setLoading(false);
     }
-    setLoading(false);
   }
-
-// get user account from metamask
+  // get user account from metamask
   const getUserAccount = async() => {
     if (window.ethereum) {
       try {
@@ -111,7 +104,7 @@ export const AuthProvider = ({ children }) => {
           if(accounts[0] !== user.wallet) return message.error("Look like it's not an address you register!!")
           setAddress(accounts[0]);
           getBepTokenBalance(accounts[0]);
-          // router.push('/');
+          router.push('/');
         });
       } catch (error) {
         console.error(error);
@@ -120,43 +113,30 @@ export const AuthProvider = ({ children }) => {
       message.error("Metamask extensions not detected!");
     }
   };
-// get Contract token balance 
+  // get Contract token balance
   const getBepTokenBalance = async(fromAddress) => {
     let contract = useContract();
-    
-    // Get decimal
     let decimal = await contract.methods.decimals().call();
-    // Get Symbol
     let symbol = await contract.methods.symbol().call();
-    setSymbol(symbol); 
-
-    // if(Cookie.get(`account:${user.email}`)) {
-    //   // Get Balance
-    //   const data = JSON.parse(Cookie.get(`account:${user.email}`));
-    //   let balance = await contract.methods.balanceOf(`0x${data.address}`).call();
-    //   setBalance(balance / Math.pow(10,decimal));
-    // } else {
-      // Get Balance
-      let balance = await contract.methods.balanceOf(fromAddress).call();
-      setBalance(balance / Math.pow(10,decimal))
-    // }
+    let balance = await contract.methods.balanceOf(fromAddress).call();
+    setSymbol(symbol);
+    setBalance(balance / Math.pow(10, decimal));
   }
 
   const context = { 
     user, 
-    error, 
     loading, 
+    address,
+    balance,
+    symbol, 
     register, 
     login, 
     logout, 
     getUserAccount,
-    address,
-    balance,
-    symbol 
   };
   return (
     <AuthContext.Provider value={context}>
-      { children }
+      {children}
     </AuthContext.Provider>
   )
 }

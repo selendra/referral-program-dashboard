@@ -1,9 +1,9 @@
-import Header from '../../components/Header'
-import { API_URL } from '../../config'
-import { parseCookies } from '../../helper'
 import Head from "next/head"
 import styled from 'styled-components'
 import { Table } from 'antd'
+import { API_URL } from '../../config'
+import { parseCookies } from '../../helper'
+import Header from '../../components/Header'
 
 export default function Details({ data }) {
   const columns = [

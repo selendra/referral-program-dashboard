@@ -1,16 +1,16 @@
-import Header from "../components/Header"
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import styled from 'styled-components'
-import Cookie from 'js-cookie'
 import { useState, useContext, useEffect } from 'react'
 import { Button, Row, Input, Modal, Col, message } from 'antd'
+import Cookie from 'js-cookie'
+import styled from 'styled-components'
+
+import Header from "../components/Header"
+import ShowBalance from '../components/ShowBalance'
 import AuthContext from '../context/AuthContext'
 import { NEXT_URL } from '../config'
-
-import ShowBalance from '../components/ShowBalance'
-import { useContract } from "../utils/useContract"
 import { useWeb3 } from "../utils/useWeb3"
+import { useContract } from "../utils/useContract"
 
 export default function GetInvite() {
   const router = useRouter();
@@ -57,6 +57,7 @@ export default function GetInvite() {
           txHash
         })
       })
+
       const resData = await res.json();
 
       if(res.ok) {
@@ -74,6 +75,15 @@ export default function GetInvite() {
 
   const handleConfirm = async () => {
     if(!cookie && !balance) return message.error("Please import your Account!");
+    let compairAddress;
+    const cookieAddress = JSON.parse(Cookie.get(`account:${user.email}`));
+    if((cookieAddress.address).slice(0,2) !== "0x") {
+      compairAddress = "0x" + cookieAddress.address;
+    } else {
+      compairAddress = cookieAddress.address;
+    }
+    if(compairAddress !== user.wallet) return message.error("Look like it's not an address you register!!");
+    
     setIndicator(true);
     const data = JSON.stringify(Cookie.get(`account:${user.email}`));
     const res = await fetch(`${NEXT_URL}/api/get-invite`, {

@@ -1,19 +1,21 @@
 import Head from 'next/head'
-import styled from 'styled-components'  
-import Image from 'next/image'
 import Link from 'next/link'
-import { Form, Input, Button, Row } from 'antd'
-import Loading from '../components/Loading'
+import Image from 'next/image'
 import { useContext, useState } from 'react'
+import { Form, Input, Button, Row } from 'antd'
+import styled from 'styled-components'  
 import AuthContext from '../context/AuthContext'
 
 export default function Login() {
-  const { login, error } = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
 
   const handleLogin = (val) => {
     setLoading(true);
-    login({ email: val.email, password: val.password }).then(_=> setLoading(false))
+    login({ 
+      email: val.email.toLowerCase(),
+      password: val.password
+    }).then(_=> setLoading(false))
   }
 
   return (

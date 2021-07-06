@@ -1,9 +1,10 @@
 import Head from 'next/head'
-import styled from 'styled-components'  
-import Image from 'next/image'
 import Link from 'next/link'
-import { Form, Input, Button, Row } from 'antd'
+import Image from 'next/image'
 import { useContext, useState } from 'react'
+import { Form, Input, Button, Row, message } from 'antd'
+import { ethers } from 'ethers';
+import styled from 'styled-components'  
 import AuthContext from '../context/AuthContext'
 
 export default function Register() {
@@ -12,11 +13,16 @@ export default function Register() {
 
   const handleRegister = async(val) => {
     setLoading(true);
+    const isEtherAddress = ethers.utils.isAddress(val.wallet);
+    if(!isEtherAddress) {
+      setLoading(false);
+      return message.error('Look like wallet address not valid!');
+    } 
     register({
       email: val.email.toLowerCase(),
       password: val.password,
       phone: val.phone,
-      wallet: val.wallet
+      wallet: val.wallet.toLowerCase()
     }).then(() => {setLoading(false)})
   }
 

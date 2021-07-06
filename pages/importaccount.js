@@ -28,13 +28,25 @@ export default function Importaccount() {
 
   const handleImport = async () => {
     const web3 = useWeb3();
+    let address;
     if(user.email) {
       if(private_key) {
         const keystoreJsonV3 = web3.eth.accounts.encrypt(private_key, password);
-        if(keystoreJsonV3.address !== user.wallet) return message.error("Look like it's not an address you register!!");
+        if((keystoreJsonV3.address).slice(0,2) !== "0x") {
+          address = "0x" + keystoreJsonV3.address;
+        } else {
+          address = keystoreJsonV3.address;
+        }
+        if(address !== user.wallet) return message.error("Look like it's not an address you register!!");
         Cookie.set(`account:${user.email}`, JSON.stringify(keystoreJsonV3));
       } else {  
-        if(json.address !== user.wallet) return message.error("Look like it's not an address you register!!");
+        // console.log(json.address, user.wallet)
+        if((json.address).slice(0,2) !== "0x") {
+          address = "0x" + json.address;
+        } else {
+          address = json.address;
+        }
+        if(address !== user.wallet) return message.error("Look like it's not an address you register!!");
         Cookie.set(`account:${user.email}`, JSON.stringify(json));
       }
       router.push('/get-invite');

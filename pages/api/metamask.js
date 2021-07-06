@@ -24,7 +24,6 @@ export default async (req, res) => {
     })
 
     const data = await serverRes.json();
-    console.log(data)
     
     if(serverRes.ok) {
       res.status(200).json({ data })

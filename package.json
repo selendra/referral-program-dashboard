@@ -5,12 +5,12 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start -p $PORT"
+    "start": "next start"
   },
   "dependencies": {
     "antd": "^4.15.5",
-    "better-react-spinkit": "^2.0.4",
     "cookie": "^0.4.1",
+    "ethers": "^5.4.1",
     "js-cookie": "^2.2.1",
     "next": "10.2.0",
     "nprogress": "^0.2.0",
