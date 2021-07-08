@@ -13,7 +13,7 @@ import { useHistory } from 'react-router-dom'
 
 export default function GetInvite() {
   const router = useHistory();
-  const {user, loading, balance, address} = useContext(AuthContext);
+  const {user, balance, address} = useContext(AuthContext);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalConfirm, setModalConfirm] = useState(false);
@@ -114,7 +114,7 @@ export default function GetInvite() {
     if(user){ 
       setCookie(Cookie.get(`account:${user.email}`));
     }
-  },[loading]);
+  },[user]);
 
   return (
     <div>

@@ -11,7 +11,7 @@ export default function Successfully() {
       <Container>
         <HomeContainer>
           <Row justify='center'>
-            <img src={congrat} width='280' height='280' />
+            <img src={congrat} alt='congrat' width='280' height='280' />
           </Row>
           <Title>Thank for your purchase!</Title>
           <Text>Your payment was successful, and your purchase is complete.</Text>

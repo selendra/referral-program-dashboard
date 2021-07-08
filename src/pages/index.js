@@ -62,10 +62,10 @@ export default function Home() {
       title: 'Action',  
       key: 'action',
       render: (record) => {
-        // const ref = `https://airdrop.selendra.org/claim-$sel?ref=${record.referral_id}`;
+        const ref = `https://airdrop.selendra.org/claim-$sel?ref=${record.referral_id}`;
         return(
           <Space size="middle">
-            <a>Invite Friends/Copy</a>
+            <a href={ref} target="_blank" rel="noreferrer">Invite Friends/Copy</a>
           </Space>
         )
       },

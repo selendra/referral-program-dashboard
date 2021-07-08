@@ -6,8 +6,9 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 
 export default function Details() {
-  const [data, setData] = useState([]);
   const { id } = useParams();
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function FetchData() {
@@ -17,12 +18,14 @@ export default function Details() {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       })
-    
-      const data = await res.json();
-      setData(data.data);
+      if(res.ok) {
+        const data = await res.json();
+        setData(data.data);
+      }
+      setLoading(false);
     }
     FetchData();
-  }, [])
+  }, [id])
 
   const columns = [
     {
@@ -63,7 +66,7 @@ export default function Details() {
       <Container>
         <DetailContainer>
           <div style={{padding: '1em 0'}}/>
-          <Table columns={columns} dataSource={data} rowKey={record => record._id} />
+          <Table loading={loading} columns={columns} dataSource={data} rowKey={record => record._id} />
         </DetailContainer>
       </Container>
     </div>

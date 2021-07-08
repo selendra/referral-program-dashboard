@@ -8,7 +8,6 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [address, setAddress] = useState('');
   const [balance, setBalance] = useState('');
   const [symbol, setSymbol] = useState('');
@@ -72,7 +71,6 @@ export const AuthProvider = ({ children }) => {
 
   const context = { 
     user, 
-    loading, 
     address,
     balance,
     symbol, 
@@ -82,7 +80,7 @@ export const AuthProvider = ({ children }) => {
   };
   return (
     <AuthContext.Provider value={context}>
-      {children}
+      { children }
     </AuthContext.Provider>
   )
 }
