@@ -51,6 +51,7 @@ export default function GetInvite() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem("token")}`
         },
         body: JSON.stringify({
           txHash
@@ -89,6 +90,7 @@ export default function GetInvite() {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem("token")}`
       },
       body: JSON.stringify({
         keystore: data,
@@ -103,7 +105,7 @@ export default function GetInvite() {
       router.push('/successfully');
       setIndicator(false);
     } else {
-      message.error(resData.message);
+      message.error(resData.error);
       setIndicator(false);
     }
   }
