@@ -9,6 +9,7 @@ import { NavLink } from 'react-router-dom'
 export default function Profile() {
   const { user } = useContext(AuthContext);
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function FetchData() {
@@ -19,8 +20,11 @@ export default function Profile() {
         },
       })
     
-      const data = await response.json();
-      setData(data.data);
+      if(response.ok) {
+        const data = await response.json();
+        setData(data.data);
+      }
+      setLoading(false);
     }
     FetchData();
   }, [])
@@ -94,7 +98,7 @@ export default function Profile() {
               <RowCard justify='center'>
                 <Col>
                   <Title>History</Title>
-                  <Table columns={columns} dataSource={data} rowKey={record => record._id} />
+                  <Table loading={loading} columns={columns} dataSource={data} rowKey={record => record._id} />
                 </Col>
               </RowCard>
             </div>

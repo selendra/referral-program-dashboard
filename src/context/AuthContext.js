@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from 'react'
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import { message } from 'antd'
 import { Contract } from '../utils/useContract'
 import { API_URL } from '../config'
@@ -19,67 +19,11 @@ export const AuthProvider = ({ children }) => {
     checkUserLoggedIn();
   }, []);
 
-  // Register user
-  const register = async ({email, password, phone, wallet}) => {
-    setLoading(true);
-    const res = await fetch(`${API_URL}/register`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        email,
-        password,
-        phone,
-        wallet
-      })
-    })
-
-    const data = await res.json();
-
-    if(res.ok) {
-      setLoading(false);
-      // history.push('/login');
-      message.success('successfully register');
-    } else {
-      setLoading(false);
-      message.error(data.message);
-    }
-  }
-
-  // Login user
-  const login = async ({email, password}) => {
-    const res = await fetch(`${API_URL}/user/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        email,
-        password
-      })
-    })
-
-    const data = await res.json();
-
-    if(res.ok) {
-      // history.push('/');
-      checkUserLoggedIn();
-      localStorage.setItem("token", data.token);
-      message.success('successfully login');
-    } else {
-      message.error(data.message);
-    }
-  }
   // Logout user
   const logout = async () => {
-    const res = await fetch(`${API_URL}/api/logout`, {
-      method: 'POST',
-    })
-    if(res.ok) {
-      setUser(null);
-      history.push('/login');
-    }
+    setUser(null);
+    localStorage.setItem("token", "");
+    history.push('/login');
   }
   // Check if user is logged in
   const checkUserLoggedIn = async () => {
@@ -132,10 +76,9 @@ export const AuthProvider = ({ children }) => {
     address,
     balance,
     symbol, 
-    register, 
-    login, 
     logout, 
     getUserAccount,
+    checkUserLoggedIn
   };
   return (
     <AuthContext.Provider value={context}>

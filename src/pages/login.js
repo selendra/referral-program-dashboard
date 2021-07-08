@@ -1,20 +1,41 @@
 import { useContext, useState } from 'react'
-import { Form, Input, Button, Row } from 'antd'
+import { Form, Input, Button, Row, message } from 'antd'
 import styled from 'styled-components' 
 import { NavLink } from 'react-router-dom'
 import selendra from '../assets/selendra.png'
+import { API_URL } from '../config'
+import { useHistory } from 'react-router-dom';
 import AuthContext from '../context/AuthContext'
 
 export default function Login() {
-  const { login } = useContext(AuthContext);
+  let history = useHistory();
+  const { checkUserLoggedIn } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = (val) => {
+  const handleLogin = async(val) => {
     setLoading(true);
-    login({ 
-      email: val.email.toLowerCase(),
-      password: val.password
-    }).then(_=> setLoading(false))
+    const res = await fetch(`${API_URL}/user/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email: val.email.toLowerCase(),
+        password: val.password
+      })
+    })
+
+    const data = await res.json();
+
+    if(res.ok) {
+      localStorage.setItem("token", data.token);
+      message.success('successfully login');
+      history.push('/');
+      checkUserLoggedIn();
+    } else {
+      message.error(data.message);
+      setLoading(false);
+    }
   }
 
   return (

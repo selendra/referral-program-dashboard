@@ -9,6 +9,7 @@ import { NavLink } from 'react-router-dom';
 
 export default function Home() {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function FetchData() {
@@ -18,9 +19,12 @@ export default function Home() {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       })
-    
-      const data = await response.json();
-      setData(data.data);
+
+      if(response.ok) {
+        const data = await response.json();
+        setData(data.data);
+      }
+      setLoading(false);
     }
     FetchData();
   }, [])
@@ -58,7 +62,7 @@ export default function Home() {
       title: 'Action',  
       key: 'action',
       render: (record) => {
-        const ref = `https://airdrop.selendra.org/claim-$sel?ref=${record.referral_id}`;
+        // const ref = `https://airdrop.selendra.org/claim-$sel?ref=${record.referral_id}`;
         return(
           <Space size="middle">
             <a>Invite Friends/Copy</a>
@@ -75,7 +79,7 @@ export default function Home() {
         <HomeContainer>
           <ShowBalance />
           <div style={{padding: '1em 0'}}/>
-          <Table columns={columns} dataSource={data} rowKey={record => record._id} />
+          <Table loading={loading} columns={columns} dataSource={data} rowKey={record => record._id} />
         </HomeContainer>
       </Container>
     </div>

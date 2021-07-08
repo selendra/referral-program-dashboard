@@ -6,7 +6,7 @@ import { Button, Row, Input, Upload, Col, Switch, message } from 'antd'
 import Header from '../components/Header'
 import AuthContext from '../context/AuthContext'
 import { Web3Instance } from '../utils/useWeb3'
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 
 export default function Importaccount() {
   let history = useHistory();
