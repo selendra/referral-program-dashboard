@@ -36,7 +36,7 @@ export default function Header() {
                   </Avatar>
                 </NavLink>
               )}
-              <ButtonBuy><NavLink to='/get-invite'>Invite more</NavLink></ButtonBuy>
+              <ButtonBuy><NavLink to='/get-invite'>Get Referral ID</NavLink></ButtonBuy>
               <ButtonLogout onClick={logout} type='text'>Log Out</ButtonLogout>
             </Row>
           </Col>
@@ -68,7 +68,7 @@ export default function Header() {
               <div style={{margin: '1em 0'}}/>
               {user && <ProfileName>{user.email}</ProfileName>}
               <div style={{margin: '1em 0'}}/>
-              <ButtonBuy><NavLink to='/get-invite'>Invite more</NavLink></ButtonBuy>
+              <ButtonBuy><NavLink to='/get-invite'>Get Referral ID</NavLink></ButtonBuy>
               <div style={{margin: '1em 0'}}/>
               <ButtonLogout onClick={logout} type='text'>Log Out</ButtonLogout>
             </Drawer>
@@ -92,14 +92,15 @@ const HeaderContainer = styled.div`
   align-items: center;
   @media (max-width: 56rem) {
     padding: 0 1em;
-  } 
+  }
 `
 const ButtonBuy = styled(Button)`
   border: none;
-  border-radius: 16px;
+  border-radius: 4px;
   color: #fff;
   background: #03A9F4;
   margin: 0 1em;
+  font-weight: 600;
 `
 const ButtonLogout = styled(Button)`
   color: #D65B09;
@@ -111,4 +112,5 @@ const ButtonLogout = styled(Button)`
 const ProfileName = styled.p`
   margin: 0 1em;
   color: #F5F5F5;
+  font-weight: 600;
 `

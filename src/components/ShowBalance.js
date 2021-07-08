@@ -64,6 +64,7 @@ const Balance = styled.span`
   color: #D65B09;
 `
 const ButtonImport = styled(Button)`
-  border-radius: 18px;
+  border-radius: 4px;
   width: 160px;
+  height: 46px;
 `

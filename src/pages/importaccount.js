@@ -7,6 +7,7 @@ import Header from '../components/Header'
 import AuthContext from '../context/AuthContext'
 import { Web3Instance } from '../utils/useWeb3'
 import { useHistory } from 'react-router-dom';
+import {ReactComponent as MetamaskIcon} from '../assets/metamask.svg'
 
 export default function Importaccount() {
   let history = useHistory();
@@ -61,7 +62,7 @@ export default function Importaccount() {
           <Row justify='center'>
             <Col>
               <Row>
-                <ButtonMeta type='primary' onClick={getUserAccount}>Connect with metamask</ButtonMeta>
+                <ButtonMeta type='primary' onClick={getUserAccount}><Row><MetamaskIcon />Connect with metamask</Row></ButtonMeta>
               </Row><br/>
               <Row align='middle'>
                 <Switch onChange={() => setPrivateKey(!privateKey)} /><SpanText>Private Key</SpanText><br/>
@@ -91,8 +92,7 @@ export default function Importaccount() {
 }
 
 const Container = styled.div`
-  width: 100vw;
-  height: 100vh;
+  min-height: calc(100vh - 68px);
   background-color: #e6eeff;
 `
 const HomeContainer = styled.div`
@@ -103,14 +103,15 @@ const HomeContainer = styled.div`
   } 
 `
 const InputStyled = styled(Input)`
-  border-radius: 16px;
+  border-radius: 4px;
   width: 320px;
   height: 48px;
 `
 const ButtonStyled = styled(Button)`
-  border-radius: 16px;
+  border-radius: 4px;
   width: 320px;
   height: 48px;
+  font-weight: 600;
 `
 const Spacing = styled.div`
   padding: 1em 0;
@@ -120,5 +121,7 @@ const SpanText = styled.span`
   margin-left: 10px;
 `
 const ButtonMeta = styled(Button)`
-  border-radius: 16px;
+  border-radius: 4px;
+  height: 40px;
+  font-weight: 600;
 `

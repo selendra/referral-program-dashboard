@@ -176,8 +176,7 @@ export default function GetInvite() {
 }
 
 const Container = styled.div`
-  width: 100vw;
-  height: 100vh;
+  min-height: calc(100vh - 68px);
   background-color: #e6eeff;
 `
 const HomeContainer = styled.div`
@@ -191,7 +190,7 @@ const RefItem = styled.div`
   background: #fff;
   height: 70px;
   width: 100%;
-  border-radius: 18px;
+  border-radius: 4px;
 `
 const Text = styled.p`
   margin: 0;
@@ -203,18 +202,18 @@ const TextPrice = styled.p`
   color: #D65B09;
 `
 const ButtonBuy = styled(Button)`
-  border-radius: 18px;
+  border-radius: 4px;
   width: 160px;
 `
 const ButtonConfirm = styled(Button)`
-  border-radius: 18px;
+  border-radius: 4px;
   width: 100%;
   height: 46px;
 `
 const ButtonCancel = styled(Button)`
   width: 100%;
   height: 46px;
-  border-radius: 18px;
+  border-radius: 4px;
   margin-top: 1em;
   border: red 1px solid;
   &:hover {
@@ -240,6 +239,6 @@ const TextLight = styled.p`
 const InputStyled = styled(Input)`
   width: 100%;
   height: 46px;
-  border-radius: 18px;
+  border-radius: 4px;
   border: 1px solid grey;
 `

@@ -97,14 +97,14 @@ const LoginContainer = styled.div`
   }
 `
 const InputStyled = styled(Input)`
-  border-radius: 16px;
+  border-radius: 4px;
   width: 240px;
   height: 50px;
 `
 const ButtonStyled = styled(Button)`
   width: 100%;
   height: 40px;
-  border-radius: 16px;
+  border-radius: 4px;
   border-color: #03A9F4;
   background-color: #03A9F4;
   color: #f5f5f5;

@@ -28,8 +28,8 @@ export default function Login() {
     const data = await res.json();
 
     if(res.ok) {
-      localStorage.setItem("token", data.token);
       message.success('successfully login');
+      localStorage.setItem("token", data.token);
       history.push('/');
       checkUserLoggedIn();
     } else {
@@ -88,14 +88,14 @@ const LoginContainer = styled.div`
   }
 `
 const InputStyled = styled(Input)`
-  border-radius: 16px;
+  border-radius: 4px;
   width: 240px;
   height: 50px;
 `
 const ButtonStyled = styled(Button)`
   width: 100%;
   height: 40px;
-  border-radius: 16px;
+  border-radius: 4px;
   border-color: #03A9F4;
   background-color: #03A9F4;
   color: #f5f5f5;
