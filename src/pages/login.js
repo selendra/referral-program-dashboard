@@ -20,7 +20,7 @@ export default function Login() {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        email: val.email.toLowerCase(),
+        email: val.email,
         password: val.password
       })
     })
