@@ -1,7 +1,8 @@
+import { useContext, useEffect } from 'react'
 import {
   BrowserRouter as Router,
   Route,
-  Switch
+  Switch,
 } from 'react-router-dom'
 
 import Home from './pages'
@@ -13,26 +14,26 @@ import Profile from './pages/profile'
 import UpdateProfile from './pages/updateprofile'
 import Successfully from './pages/successfully'
 import Details from './pages/detail/_id'
+import { ProtectedRoute } from './helper/routes';
 import { AuthProvider } from './context/AuthContext'
 
-function App() {
+
+export default function App() { 
   return (
     <Router>
       <Switch>
         <AuthProvider>
-          <Route path='/' exact component={Home} />
           <Route path='/login' component={Login} />
           <Route path='/register' component={Register} />
-          <Route path='/profile' component={Profile} />
-          <Route path='/updateprofile' component={UpdateProfile} />
-          <Route path='/get-invite' component={GetInvite} />
-          <Route path='/importaccount' component={Importaccount} />
-          <Route path='/details/:id' component={Details} />
-          <Route path='/successfully' component={Successfully} />
+          <ProtectedRoute exact path='/' component={Home} />
+          <ProtectedRoute path='/profile' component={Profile} />
+          <ProtectedRoute path='/updateprofile' component={UpdateProfile} />
+          <ProtectedRoute path='/get-invite' component={GetInvite} />
+          <ProtectedRoute path='/importaccount' component={Importaccount} />
+          <ProtectedRoute path='/details/:id' component={Details} />
+          <ProtectedRoute path='/successfully' component={Successfully} />
         </AuthProvider>
       </Switch>
     </Router>
   );
 }
-
-export default App;
