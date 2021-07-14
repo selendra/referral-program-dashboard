@@ -26,47 +26,51 @@ export default function GetInvite() {
     if(cookie) {
       setModalConfirm(true);
     } else if(address) {
-      const web3 = Web3Instance();
-      const contract = Contract();
-
-      const recipient = '0x1d95aD53E69Fe58efe777a7490EcF63A2CcbB1De'
-      const transaction = contract.methods.transfer(
-        recipient,
-        web3.utils.toHex(web3.utils.toWei('1', 'ether'))
-      );
-
-      const options = {
-        from: address,
-        to      : transaction._parent._address,
-        data    : transaction.encodeABI(),
-      };
-
-      const txHash = await window.ethereum.request({
-        method: 'eth_sendTransaction',
-        params: [options],
-      })
-      
-      setPurchaseLoading(true);
-      const res = await fetch(`${API_URL}/referral/metamask`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        },
-        body: JSON.stringify({
-          txHash
+      try {
+        const web3 = Web3Instance();
+        const contract = Contract();
+  
+        const recipient = '0x1d95aD53E69Fe58efe777a7490EcF63A2CcbB1De'
+        const transaction = contract.methods.transfer(
+          recipient,
+          web3.utils.toHex(web3.utils.toWei('1', 'ether'))
+        );
+  
+        const options = {
+          from: address,
+          to      : transaction._parent._address,
+          data    : transaction.encodeABI(),
+        };
+  
+        const txHash = await window.ethereum.request({
+          method: 'eth_sendTransaction',
+          params: [options],
         })
-      })
-
-      const resData = await res.json();
-
-      if(res.ok) {
-        message.success('successfully purchase!')
-        router.push('/successfully');
-        setPurchaseLoading(false);
-      } else {
-        message.error(resData.message);
-        setPurchaseLoading(false);
+        
+        setPurchaseLoading(true);
+        const res = await fetch(`${API_URL}/referral/metamask`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+          },
+          body: JSON.stringify({
+            txHash
+          })
+        })
+  
+        const resData = await res.json();
+  
+        if(res.ok) {
+          message.success('successfully purchase!')
+          router.push('/successfully');
+          setPurchaseLoading(false);
+        } else {
+          message.error(resData.message);
+          setPurchaseLoading(false);
+        }
+      } catch(err) {
+        console.log(err)
       }
     } else {
       message.error("Please import account!!");

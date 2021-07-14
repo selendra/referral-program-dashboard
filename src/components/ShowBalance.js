@@ -16,14 +16,11 @@ export default function ShowBalance() {
   const getBalance = async () => {
     if(Cookie.get(`account:${user.email}`)) {
       let contract = Contract();
-      
       // Get decimal
       let decimal = await contract.methods.decimals().call();
-  
       // Get Symbol
       let symbol = await contract.methods.symbol().call();
       setCsymbol(symbol);
-  
       // Get Balance
       const data = JSON.parse(Cookie.get(`account:${user.email}`));
       let balance = await contract.methods.balanceOf(`0x${data.address}`).call();

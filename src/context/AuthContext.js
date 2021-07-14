@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from 'react'
-import { useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom'
 import { message } from 'antd'
 import { Contract } from '../utils/useContract'
 import { API_URL } from '../config'
@@ -66,7 +66,7 @@ export const AuthProvider = ({ children }) => {
     let symbol = await contract.methods.symbol().call();
     let balance = await contract.methods.balanceOf(fromAddress).call();
     setSymbol(symbol);
-    setBalance(balance / Math.pow(10, decimal));
+    setBalance((balance / Math.pow(10, decimal)).toString());
   }
 
   const context = { 
@@ -84,5 +84,4 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   )
 }
-
 export default AuthContext;

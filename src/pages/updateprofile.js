@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from 'react'
+import { useContext, useState } from 'react'
 import styled from 'styled-components'
 import { Avatar, Row, Col, Input, Button, message } from 'antd'
 import { ethers } from 'ethers';
@@ -10,31 +10,12 @@ import AuthContext from '../context/AuthContext'
 
 export default function UpdateProfile() {
   let history = useHistory();
-  const { user } = useContext(AuthContext);
-  const [data, setData] = useState([]);
+  const { user, checkUserLoggedIn } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const [wallet, setWallet] = useState('');
   const [phone, setPhone] = useState('');
 
-  useEffect(() => {
-    async function FetchData() {
-      const response = await fetch(`${API_URL}/referral`, {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
-    
-      if(response.ok) {
-        const data = await response.json();
-        setData(data.data);
-      }
-      setLoading(false);
-    }
-    FetchData();
-  }, [])
-
-  const handleUpdate = async(val) => {
+  const handleUpdate = async() => {
     setLoading(true);
     const isEtherAddress = ethers.utils.isAddress(wallet);
     if(!isEtherAddress) {
@@ -58,6 +39,7 @@ export default function UpdateProfile() {
 
     if(res.ok) {
       message.success('successfully updated!!');
+      checkUserLoggedIn();
       history.push('/');
     } else {
       setLoading(false);
