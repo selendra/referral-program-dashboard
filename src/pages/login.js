@@ -1,11 +1,13 @@
 import { useContext, useState } from 'react'
-import { Form, Input, Button, Row, message } from 'antd'
+import { Form, Input, Button, Row, message, Col } from 'antd'
 import styled from 'styled-components' 
-import { NavLink } from 'react-router-dom'
+import { NavLink, useHistory } from 'react-router-dom'
 import selendra from '../assets/selendra.png'
 import { API_URL } from '../config'
-import { useHistory } from 'react-router-dom';
 import AuthContext from '../context/AuthContext'
+import { GoogleLogin } from 'react-google-login';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
+import facebook from '../assets/facebook.png';
 
 export default function Login() {
   let history = useHistory();
@@ -25,6 +27,53 @@ export default function Login() {
       })
     })
 
+    const data = await res.json();
+
+    if(res.ok) {
+      message.success('successfully login');
+      localStorage.setItem("token", data.token);
+      history.push('/');
+      checkUserLoggedIn();
+    } else {
+      message.error(data.message);
+      setLoading(false);
+    }
+  }
+
+  const responseGoogle = async(response) => {
+    const res = await fetch(`${API_URL}/user/googlelogin`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        tokenId: response.tokenId
+      })
+    })
+    const data = await res.json();
+
+    if(res.ok) {
+      message.success('successfully login');
+      localStorage.setItem("token", data.token);
+      history.push('/');
+      checkUserLoggedIn();
+    } else {
+      message.error(data.message);
+      setLoading(false);
+    }
+  }
+
+  const responseFacebook = async(response) => {
+    const res = await fetch(`${API_URL}/user/facebooklogin`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        accessToken: response.accessToken,
+        userID: response.userID
+      })
+    })
     const data = await res.json();
 
     if(res.ok) {
@@ -64,6 +113,31 @@ export default function Login() {
           <NavLink to='/register'>
             <RouteLink>register</RouteLink>
           </NavLink>
+        </Row>
+        <Row>
+          <Col>
+            <GoogleLoginCustomize
+              clientId="920463513406-u4gunghahalt1d2liskum7j8ksqsbpfc.apps.googleusercontent.com"
+              buttonText="Login"
+              onSuccess={responseGoogle}
+              cookiePolicy={'single_host_origin'}
+            />
+          </Col>
+          <Col>
+            <FacebookLogin
+              appId="1154272804982160"
+              autoLoad={false}
+              fields="name,email,picture"
+              callback={responseFacebook} 
+              render={renderProps => (
+                <FacebookLoginCustomize onClick={renderProps.onClick}>
+                  <Row align='middle'>
+                    <img src={facebook} alt='facebook'/>Login
+                  </Row>
+                </FacebookLoginCustomize>
+              )}
+            />
+          </Col>
         </Row>
       </LoginContainer>
     </Container>
@@ -107,5 +181,29 @@ const RouteLink = styled.p`
   cursor: pointer;
   &:hover {
     color: #4609D6;
+  }
+`
+const GoogleLoginCustomize = styled(GoogleLogin)`
+  height: 40px;
+  box-shadow: none!important;
+  background-color: whitesmoke!important;
+  div {
+    background-color: whitesmoke!important;
+  }
+  span {
+    font-weight: 600!important;
+  }
+`
+const FacebookLoginCustomize = styled.button`
+  background-color: rgba(24,119,242,1);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  height: 40px;
+  padding: 0 10px;
+  img {
+    width: 24px;
+    height: auto;
+    margin-right: 18px;
   }
 `

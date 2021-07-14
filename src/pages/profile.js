@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect } from 'react'
 import AuthContext from '../context/AuthContext'
 import styled from 'styled-components'
-import { Avatar, Row, Col, Table, Tag, Space  } from 'antd'
+import { Avatar, Row, Col, Table, Tag, Space, Button  } from 'antd'
 import Header from '../components/Header'
 import { API_URL } from '../config'
 import { NavLink } from 'react-router-dom'
@@ -90,8 +90,18 @@ export default function Profile() {
                     </Avatar>
                   </Row>
                   <ProfileItem><ProfileTitle>Email:</ProfileTitle>{user.email}</ProfileItem>
-                  <ProfileItem><ProfileTitle>Wallet:</ProfileTitle>{user.wallet}</ProfileItem>
-                  <ProfileItem><ProfileTitle>Phone:</ProfileTitle>{user.phone}</ProfileItem>
+                  { user.wallet &&
+                    <ProfileItem><ProfileTitle>Wallet:</ProfileTitle>{user.wallet}</ProfileItem>
+                  }
+                  {
+                    user.phone &&
+                    <ProfileItem><ProfileTitle>Phone:</ProfileTitle>{user.phone}</ProfileItem>
+                  }
+                  { (!user.wallet || !user.phone) && (
+                    <Row justify='center'>
+                      <Button type='link'><NavLink to='/updateprofile'>Update Profile</NavLink></Button>
+                    </Row>
+                  )}
                 </Col>
               </RowCard>
               <br/>
@@ -136,6 +146,7 @@ const ProfileItem = styled.h1`
   font-size: 20px;
   font-weight: 600;
   padding-top: 1rem;
+  word-break: break-all;
 `
 const RowCard = styled(Row)`
   background: #FFF;
