@@ -2,11 +2,12 @@ import { useState } from 'react'
 import { Form, Input, Button, Row, message } from 'antd'
 import { ethers } from 'ethers';
 import styled from 'styled-components'  
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import selendra from '../assets/selendra.png'
 import { API_URL } from '../config'
 
 export default function Register() {
+  const history = useHistory();
   const [loading, setLoading] = useState(false);
 
   const handleRegister = async(val) => {
@@ -16,7 +17,7 @@ export default function Register() {
       setLoading(false);
       return message.error('Look like wallet address not valid!');
     } 
-    const res = await fetch(`${API_URL}/register`, {
+    const res = await fetch(`${API_URL}/user/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -33,11 +34,11 @@ export default function Register() {
 
     if(res.ok) {
       setLoading(false);
-      // history.push('/login');
+      history.push('/login');
       message.success('successfully register');
     } else {
       setLoading(false);
-      message.error(data.message);
+      message.error(data.message || data.error);
     }
   }
 

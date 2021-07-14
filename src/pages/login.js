@@ -35,7 +35,7 @@ export default function Login() {
       history.push('/');
       checkUserLoggedIn();
     } else {
-      message.error(data.message);
+      message.error(data.message || data.error);
       setLoading(false);
     }
   }
