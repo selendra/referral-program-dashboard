@@ -4,6 +4,7 @@ import { Row, Col, Button, Drawer, Avatar } from 'antd'
 import styled from 'styled-components'
 import AuthContext from '../context/AuthContext'
 import selendraHeader from '../assets/selendra-header.png'
+import { ReactComponent as Menu } from '../assets/menu.svg'
 
 export default function Header() {
   const { user, logout } = useContext(AuthContext);
@@ -42,11 +43,7 @@ export default function Header() {
           </Col>
           <Col xs={12} sm={12} md={0} lg={0} xl={0}>
             <Row justify='end'>
-              <img 
-                src='/images/menu.svg'
-                alt='selendra'
-                width='32'
-                height='32'
+              <Menu 
                 style={{cursor: 'pointer'}}
                 onClick={() => setVisible(true)}
               />
@@ -59,12 +56,25 @@ export default function Header() {
               drawerStyle={{background: '#1D3442'}}
             >
               <img
-                src='/images/selendra-header.png'
+                src={selendraHeader}
                 alt='selendra'
                 width='120'
                 height='46'
                 style={{cursor: 'pointer'}}
               />
+              <div style={{margin: '1em 0'}}/>
+              <Row justify='center'>
+                {user && (
+                  <NavLink to='/profile'>
+                    <Avatar 
+                      style={{ backgroundColor: '#f56a00', verticalAlign: 'middle', cursor: 'pointer' }} 
+                      size={{ xs: 80, sm: 80, md: 80 }}
+                    >
+                      <ProfileName>{(user.email).charAt(0).toUpperCase()}</ProfileName>
+                    </Avatar>
+                  </NavLink>
+                )}
+              </Row>
               <div style={{margin: '1em 0'}}/>
               {user && <ProfileName>{user.email}</ProfileName>}
               <div style={{margin: '1em 0'}}/>
