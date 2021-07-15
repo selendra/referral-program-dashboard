@@ -129,7 +129,7 @@ export default function Login() {
               autoLoad={false}
               fields="name,email,picture"
               callback={responseFacebook} 
-              isMobile={true}
+              isMobile={false}
               render={renderProps => (
                 <FacebookLoginCustomize onClick={renderProps.onClick}>
                   <Row align='middle'>
