@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Table, Tag, Space } from 'antd'
+import { Table, Tag, Space, message } from 'antd'
 
 import Header from '../components/Header'
 import ShowBalance from '../components/ShowBalance'
@@ -28,6 +28,11 @@ export default function Home() {
     }
     FetchData();
   }, [])
+
+  const onCopy = (url) => {
+    navigator.clipboard.writeText(url);
+    message.success('Copied!');
+  }
 
   const columns = [
     {
@@ -65,7 +70,7 @@ export default function Home() {
         const ref = `https://airdrop.selendra.org/claim-$sel?ref=${record.referral_id}`;
         return(
           <Space size="middle">
-            <a href={ref} target="_blank" rel="noreferrer">Invite Friends/Copy</a>
+            <p style={{color: '#1890ff', cursor: 'pointer'}} onClick={() => onCopy(ref)}>Invite Friends/Copy</p>
           </Space>
         )
       },
