@@ -6,10 +6,21 @@ import ShowBalance from '../components/ShowBalance'
 import { API_URL } from '../config'
 import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { ReactComponent as Facebook } from '../assets/cfacebook.svg';
+import { ReactComponent as Twitter } from '../assets/ctwitter.svg';
 
 export default function Home() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  
+  const onTwitter = (url) => {
+    const shareMSG = `Claim $SEL tokens airdrop via ${url}. %23Selendra %23Blockchain %23SmartContract %23OpenSource`;
+    window.open(`https://twitter.com/intent/tweet?text=${shareMSG}`, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');
+  }
+  const onFacebook = (url) => {
+    const shareMSG = `Claim $SEL tokens airdrop via ${url}. %23Selendra %23Blockchain %23SmartContract %23OpenSource`;
+    window.open(`http://www.facebook.com/sharer.php?u=http%3A%2F%2F${url}&quote=${shareMSG}`, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600')
+  }
 
   useEffect(() => {
     async function FetchData() {
@@ -75,6 +86,19 @@ export default function Home() {
         )
       },
     },
+    {
+      title: 'Share to social',  
+      key: 'action',
+      render: (record) => {
+        const ref = `airdrop.selendra.org/claim-$sel?ref=${record.referral_id}`;
+        return(
+          <Space size="middle">
+            <Twitter style={{cursor: 'pointer'}} onClick={()=>onTwitter(ref)} />
+            <Facebook style={{cursor: 'pointer'}} onClick={()=>onFacebook(ref)} />
+          </Space>
+        )
+      },
+    }
   ];
 
   return (
