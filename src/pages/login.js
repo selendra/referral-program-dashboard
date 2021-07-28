@@ -128,7 +128,7 @@ export default function Login() {
               appId="1154272804982160"
               autoLoad={false}
               fields="name,email,picture"
-              callback={responseFacebook} 
+              callback={responseFacebook}
               isMobile={false}
               render={renderProps => (
                 <FacebookLoginCustomize onClick={renderProps.onClick}>

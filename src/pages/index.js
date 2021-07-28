@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Table, Tag, Space, message } from 'antd'
+import { Table, Tag, Space, message, Row, Col } from 'antd'
 
 import Header from '../components/Header'
 import ShowBalance from '../components/ShowBalance'
@@ -52,9 +52,9 @@ export default function Home() {
       key: 'referral_id',
       render: (referral_id, record) => {
         return (
-          <p style={{wordBreak: 'break-all'}}>
+          <RefId>
             <NavLink to={`/details/${record._id}`}>{referral_id}</NavLink>
-          </p>
+          </RefId>
         )
       }
     },
@@ -77,11 +77,12 @@ export default function Home() {
     {
       title: 'Action',  
       key: 'action',
+      responsive: ['lg'],
       render: (record) => {
         const ref = `https://airdrop.selendra.org/claim-$sel?ref=${record.referral_id}`;
         return(
           <Space size="middle">
-            <p style={{color: '#1890ff', cursor: 'pointer'}} onClick={() => onCopy(ref)}>Invite Friends/Copy</p>
+            <RefId style={{color: '#1890ff', cursor: 'pointer'}} onClick={() => onCopy(ref)}>Invite Friends/Copy</RefId>
           </Space>
         )
       },
@@ -89,6 +90,7 @@ export default function Home() {
     {
       title: 'Share to social',  
       key: 'action',
+      responsive: ['lg'],
       render: (record) => {
         const ref = `airdrop.selendra.org/claim-$sel?ref=${record.referral_id}`;
         return(
@@ -101,14 +103,65 @@ export default function Home() {
     }
   ];
 
+  const expandedRow = (data) => {
+    const columns = [
+      {
+        title: 'Action',  
+        key: 'action',
+        render: (record) => {
+          const ref = `https://airdrop.selendra.org/claim-$sel?ref=${record.referral_id}`;
+          return(
+            <Space size="middle">
+              <RefId style={{color: '#1890ff', cursor: 'pointer'}} onClick={() => onCopy(ref)}>Invite Friends/Copy</RefId>
+            </Space>
+          )
+        },
+      },
+      {
+        title: 'Share to social',  
+        key: 'action',
+        render: (record) => {
+          const ref = `airdrop.selendra.org/claim-$sel?ref=${record.referral_id}`;
+          return(
+            <Space size="middle">
+              <Twitter style={{cursor: 'pointer'}} onClick={()=>onTwitter(ref)} />
+              <Facebook style={{cursor: 'pointer'}} onClick={()=>onFacebook(ref)} />
+            </Space>
+          )
+        },
+      }
+    ];
+    
+    return <Table columns={columns} dataSource={[data]} rowKey={record => record._id}  pagination={false} />;
+  };
+
   return (
     <div>
       <Header />
       <Container>
         <HomeContainer>
           <ShowBalance />
-          <div style={{padding: '1em 0'}}/>
-          <Table loading={loading} columns={columns} dataSource={data} rowKey={record => record._id} />
+          <Row style={{padding: '1em 0'}}>
+            <Col xs={24} sm={24} md={24} lg={0} xl={0}>
+              <Table 
+                loading={loading} 
+                columns={columns} 
+                dataSource={data} 
+                rowKey={record => record._id} 
+                expandable={{
+                  expandedRowRender: record => expandedRow(record)
+                }}
+              />
+            </Col>
+            <Col xs={0} sm={0} md={0} lg={24} xl={24}>
+              <Table 
+                loading={loading} 
+                columns={columns} 
+                dataSource={data} 
+                rowKey={record => record._id} 
+              />
+            </Col>
+          </Row>
         </HomeContainer>
       </Container>
     </div>
@@ -125,5 +178,13 @@ const HomeContainer = styled.div`
   margin: 0 auto;
   @media (max-width: 56rem) {
     padding: 0 1em;
+  } 
+`
+const RefId = styled.p`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  @media (max-width: 520px) {
+    width: 100px;
   } 
 `

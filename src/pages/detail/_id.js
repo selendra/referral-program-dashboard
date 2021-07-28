@@ -75,7 +75,7 @@ export default function Details() {
 
 const Container = styled.div`
   min-height: calc(100vh - 68px);
-  background-color: #e2f3f5;
+  background-color: #e6eeff;
 `
 const DetailContainer = styled.div`
   max-width: 56rem;

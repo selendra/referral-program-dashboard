@@ -36,9 +36,9 @@ export default function Profile() {
       key: 'referral_id',
       render: (referral_id, record) => {
         return (
-          <p style={{wordBreak: 'break-all'}}>
+          <ShortStr style={{wordBreak: 'break-all'}}>
             <NavLink to={`/details/${record._id}`}>{referral_id}</NavLink>
-          </p>
+          </ShortStr>
         )
       }
     },
@@ -62,10 +62,12 @@ export default function Profile() {
       title: 'Trx Hash',  
       key: 'action',
       render: (record) => {
-        const ref = `https://testnet.bscscan.com/tx/${record.transactionHash}`;
+        const ref = `https://bscscan.com/tx/${record.transactionHash}`;
         return(
           <Space size="middle">
-            <a style={{wordBreak: 'break-all'}} href={ref} target='_blank' rel="noreferrer">{(record.transactionHash)}</a>
+            <a style={{wordBreak: 'break-all'}} href={ref} target='_blank' rel="noreferrer">
+              <ShortStr>{(record.transactionHash)}</ShortStr>
+            </a>
           </Space>
         )
       },
@@ -79,23 +81,29 @@ export default function Profile() {
         <ProfileContainer>
           {user && (
             <div>
-              <RowCard justify='center'>
+              <RowCard justify='center' align='middle'>
                 <Col>
                   <Row justify='center'>
                     <Avatar
                       style={{ backgroundColor: '#f56a00', verticalAlign: 'middle' }} 
-                      size={{ xs: 24, sm: 32, md: 40, lg: 120, xl: 120, xxl: 120 }}
+                      size={{ xs: 100, sm: 100, md: 100, lg: 120, xl: 220, xxl: 220 }}
                     >
                       <ProfileName>{(user.email).charAt(0).toUpperCase()}</ProfileName>
                     </Avatar>
                   </Row>
-                  <ProfileItem><ProfileTitle>Email:</ProfileTitle>{user.email}</ProfileItem>
+                  <ProfileItem>
+                    <ProfileTitle>Email</ProfileTitle>{user.email}
+                  </ProfileItem>
                   { user.wallet &&
-                    <ProfileItem><ProfileTitle>Wallet:</ProfileTitle>{user.wallet}</ProfileItem>
+                    <ProfileItem>
+                      <ProfileTitle>Wallet</ProfileTitle>{user.wallet}
+                    </ProfileItem>
                   }
                   {
                     user.phone &&
-                    <ProfileItem><ProfileTitle>Phone:</ProfileTitle>{user.phone}</ProfileItem>
+                    <ProfileItem>
+                      <ProfileTitle>Phone</ProfileTitle>{user.phone}
+                    </ProfileItem>
                   }
                   { (!user.wallet || !user.phone) && (
                     <Row justify='center'>
@@ -134,13 +142,14 @@ const ProfileContainer = styled.div`
 const ProfileName = styled.p`
   margin: 0 1em;
   color: #F5F5F5;
-  font-size: 32px;
+  font-size: 80px;
   font-weight: 600;
 `
 const ProfileTitle = styled.span`
   font-size: 20px;
   font-weight: 900;
   margin-right: .5em;
+  display: block;
 `
 const ProfileItem = styled.h1`
   font-size: 20px;
@@ -156,4 +165,12 @@ const RowCard = styled(Row)`
 const Title = styled.h1`
   font-size: 32px;
   font-weight: 900;
+`
+const ShortStr = styled.p`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  @media (max-width: 520px) {
+    width: 100px;
+  } 
 `
