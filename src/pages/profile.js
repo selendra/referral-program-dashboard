@@ -36,9 +36,9 @@ export default function Profile() {
       key: 'referral_id',
       render: (referral_id, record) => {
         return (
-          <ShortStr style={{wordBreak: 'break-all'}}>
+          <RefId>
             <NavLink to={`/details/${record._id}`}>{referral_id}</NavLink>
-          </ShortStr>
+          </RefId>
         )
       }
     },
@@ -65,9 +65,11 @@ export default function Profile() {
         const ref = `https://bscscan.com/tx/${record.transactionHash}`;
         return(
           <Space size="middle">
-            <a style={{wordBreak: 'break-all'}} href={ref} target='_blank' rel="noreferrer">
-              <ShortStr>{(record.transactionHash)}</ShortStr>
-            </a>
+            <RefId>
+              <a href={ref} target='_blank' rel="noreferrer">
+                {(record.transactionHash)}
+              </a>
+            </RefId>
           </Space>
         )
       },
@@ -166,11 +168,12 @@ const Title = styled.h1`
   font-size: 32px;
   font-weight: 900;
 `
-const ShortStr = styled.p`
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+const RefId = styled.p`
+  word-break: break-all;
   @media (max-width: 520px) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     width: 100px;
   } 
 `
